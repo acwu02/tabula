@@ -1,1 +1,3 @@
-./server/db/.env
+.env
+.gitignore
+node_modules

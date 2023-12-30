@@ -17,6 +17,12 @@ body {
   margin: 0;
 }
 
+#sidebar {
+  position: fixed;
+  display: flex;
+
+}
+
 #text, #image, #link {
   height: 5em;
   width: 5em;
@@ -26,4 +32,16 @@ body {
   position: fixed;
   top: 1em;
   left: 10em;
+}
+
+#login {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 45%;
+  top: 50%;
+}
+
+.hidden {
+  display: none;
 }

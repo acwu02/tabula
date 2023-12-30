@@ -11,6 +11,12 @@
 # production
 /build
 
+# secure data
+/server/db.env
+
+# notes
+thoughts.txt
+
 # misc
 .DS_Store
 .env.local

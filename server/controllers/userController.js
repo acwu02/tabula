@@ -19,17 +19,19 @@ usersRouter.use('/users', async (req, res, next) => {
 
 usersRouter.post('/users/login', async (req, res) => {
     const user = res.locals.user;
+    let userID = null;
     if (!await user.existsInDB()) {
-        await user.create();
-        res.json({ response: user });
+        userID = await user.create();
     } else {
         if (!await user.validatePassword()) {
             res.json({ response: "incorrectPassword" });
+            return;
         } else {
-            await user.login();
-            res.json({ response: user });
+            userID = await user.login();
         }
     }
+    user.setID(userID);
+    res.json({ response: user });
 });
 
 export default usersRouter;

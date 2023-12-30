@@ -5,6 +5,11 @@ class User {
     constructor(username, password) {
         this.username = username;
         this.password = password;
+        this.id = null;
+    }
+
+    setID(id) {
+        this.id = id;
     }
 
     async existsInDB() {
@@ -37,7 +42,7 @@ class User {
                 SELECT *
                 FROM users
                 WHERE username = ?`, [this.username]);
-            console.log(rows);
+            return rows.user_id;
         } catch (e) {
             console.error('Error executing query:', e);
         }
@@ -57,6 +62,7 @@ class User {
                 INSERT INTO
                 users (username, password)
                 VALUES (?, ?);`, [this.username, this.password]);
+            return await this.login();
         } catch (e) {
             console.error('Error executing query:', e);
         }

@@ -1,11 +1,15 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import pool from './db/pool.js';
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 
-import router from './controllers/userController.js';
+import usersRouter from './controllers/userController.js';
+import contentRouter from './controllers/contentController.js';
 
 const corsOptions = {
   origin: 'http://localhost:3000',
@@ -13,7 +17,9 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use('/', router);
+app.use('/uploads', express.static(path.join(__dirname, 'file_storage', 'uploads')));
+app.use('/', usersRouter);
+app.use('/', contentRouter);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

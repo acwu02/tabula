@@ -10,10 +10,14 @@ class HTTPError extends Error {
 const apiRequest = async (method, path, body = null) => {
   let options = {
     method: method,
-    headers: { "Content-Type": "application/json" },
+    headers: {},
     body: null
   }
-  if (body) {
+  if (body instanceof FormData) {
+    options.headers = {}; // Don't set Content-Type for FormData
+    options.body = body;
+  } else if (body) {
+    options.headers["Content-Type"] = "application/json";
     options.body = JSON.stringify(body);
   }
   let uri = API_URL + path;
@@ -21,7 +25,13 @@ const apiRequest = async (method, path, body = null) => {
   if (response.status === 200) {
     return response.json();
   } else {
-    throw new HTTPError(response.status, response.error);
+    if (response.status === 404) {
+      throw new HTTPError(response.status, "File not found");
+    } else if (response.status === 500) {
+      throw new HTTPError(response.status, "Server error");
+    } else {
+      throw new HTTPError(response.status, "Unknown error");
+    }
   }
 };
 

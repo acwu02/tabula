@@ -2,21 +2,15 @@ import React, { useRef, useEffect, useState } from 'react';
 import Image from './Image';
 import apiRequest from '../api/clientrequest';
 
-function Board({ user, displayContent }) {
-    const [content, setContent] = useState([]);
+const HOST = 'http://localhost:8080/uploads/';
 
-    const addElement = (elem) => {
-        setContent([...content, elem]);
-    }
-
-    const fetchContent = async () => {
-        let content = await apiRequest('GET', '/content/' + user.id);
-        displayContent();
-    }
+function Board({ elements, onSet }) {
 
     return (
-        <div id="content">
-
+        <div className="image-list">
+            {elements.map((element, index) => (
+                <Image key={index} x={element.x} y={element.y} source={`${HOST}${element.filename}`} onSet={onSet} />
+            ))}
         </div>
     );
 }

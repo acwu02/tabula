@@ -1,26 +1,23 @@
 import React, { useRef, useEffect, useState } from 'react';
-import Sidebar from './Sidebar';
 import Form from './Form';
-import Board from './Board';
+import Content from './Content';
 import '../css/App.css';
 
 function App() {
   const [user, setUser] = useState(null);
 
-  const handleLogin = (user) => {
+  const onLogin = (user) => {
     setUser(user);
-    displayContent(user);
   };
 
-  const displayContent = (user) => {
-    // TODO
-  };
+  // const displayContent = (user) => {
+  //   alert("GONNA DISPLAY CONTENT");
+  // };
 
   return (
     <div id="app">
-      {user && <Sidebar/>}
-      {!user && <Form onLogin={handleLogin}/>}
-      <Board user={user} displayContent={displayContent}/>
+      {user && <Content user={user}/>}
+      {!user && <Form onLogin={onLogin}/>}
     </div>
   );
 }

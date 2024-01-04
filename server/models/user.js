@@ -42,7 +42,7 @@ class User {
                 SELECT *
                 FROM users
                 WHERE username = ?`, [this.username]);
-            return rows.user_id;
+            return rows[0].user_id;
         } catch (e) {
             console.error('Error executing query:', e);
         }
@@ -50,7 +50,7 @@ class User {
 
     async retrieveContent() {
         try {
-
+            // TODO
         } catch (e) {
             console.error('Error executing query:', e);
         }

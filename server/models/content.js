@@ -2,16 +2,17 @@ import createDatabasePool from '../db/pool.js';
 const pool = createDatabasePool();
 
 class UserContent {
-    constructor(user) {
+    constructor(userID) {
         this.userID = userID;
-        this.date = new Date();
     }
 
     async fetchContent() {
         try {
+            // TODO query across tables
+            // TODO decide if I want multiple tables?
             const [rows, fields] = await pool.query(`
                 SELECT *
-                FROM content
+                FROM images
                 WHERE user_id = ?
             `, [this.userID]);
             return rows;
@@ -23,10 +24,23 @@ class UserContent {
     async uploadContent(newContent) {
         try {
             const [rows, fields] = await pool.query(`
-                INSERT INTO content
-                (user_id, content_src, created_at)
-                VALUES (?, ?, ?)
-            `, [this.userID, newContent, this.date.getTime()]);
+                INSERT INTO images
+                (user_id, filename, originalname, mimetype, size, x, y)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `, [this.userID, newContent.filename, newContent.originalname, newContent.mimetype, newContent.size, 5, 5]);
+        } catch (e) {
+            console.error('Error executing query:', e);
+        }
+    }
+
+    async updateCoords(newCoords, filename) {
+        console.log(newCoords, filename);
+        try {
+            const [rows, fields] = await pool.query(`
+                UPDATE images
+                SET x = ?, y = ?
+                WHERE filename = ?
+            `, [newCoords.x, newCoords.y, filename]);
         } catch (e) {
             console.error('Error executing query:', e);
         }

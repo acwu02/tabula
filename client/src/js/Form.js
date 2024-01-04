@@ -21,7 +21,7 @@ function Form({ onLogin, loginUser }) {
                 alert("Incorrect password");
                 return;
             }
-            const user = request.response.id;
+            const user = request.response;
             onLogin(user);
         }
     }

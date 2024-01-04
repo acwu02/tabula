@@ -10,7 +10,7 @@ const router = Router();
 
 const pool = createPool({
   host: process.env.DB_HOST,
-  user: process.env.DB_USER,
+  user: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
 });
 
@@ -30,14 +30,18 @@ const pool = createPool({
       password VARCHAR(255) NOT NULL
     )`);
 
-    // create content table
-    await connection.query(`CREATE TABLE content (
-      content_id INT AUTO_INCREMENT PRIMARY KEY,
+    // create image table
+    await connection.query(`CREATE TABLE images (
+      image_id INT AUTO_INCREMENT PRIMARY KEY,
       user_id INT NOT NULL,
-      content_src TEXT,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      filename VARCHAR(255) NOT NULL,
+      originalname VARCHAR(255) NOT NULL,
+      mimetype VARCHAR(255) NOT NULL,
+      size INT NOT NULL,
+      x INT NOT NULL,
+      y INT NOT NULL,
       FOREIGN KEY (user_id) REFERENCES users(user_id)
-    )`);
+    );`);
 
     connection.release();
     console.log('App database initialized successfully');

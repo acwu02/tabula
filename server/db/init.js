@@ -24,14 +24,16 @@ const pool = createPool({
     await connection.query(`USE app`);
 
     // create user table
-    await connection.query(`CREATE TABLE users (
+    await connection.query(`
+      CREATE TABLE users (
       user_id INT AUTO_INCREMENT PRIMARY KEY,
       username VARCHAR(255) NOT NULL UNIQUE,
       password VARCHAR(255) NOT NULL
     )`);
 
     // create image table
-    await connection.query(`CREATE TABLE images (
+    await connection.query(`
+      CREATE TABLE images (
       image_id INT AUTO_INCREMENT PRIMARY KEY,
       user_id INT NOT NULL,
       filename VARCHAR(255) NOT NULL,
@@ -45,7 +47,9 @@ const pool = createPool({
       FOREIGN KEY (user_id) REFERENCES users(user_id)
     );`);
 
-    await connection.query(`CREATE TABLE texts (
+    // create text table
+    await connection.query(`
+      CREATE TABLE texts (
       text_id INT AUTO_INCREMENT PRIMARY KEY,
       user_id INT NOT NULL,
       content VARCHAR(255) NOT NULL,
@@ -55,6 +59,18 @@ const pool = createPool({
       width INT NOT NULL,
       FOREIGN KEY (user_id) REFERENCES users(user_id)
     );`);
+
+    // create link table
+    await connection.query(`
+      CREATE TABLE links (
+      link_id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT NOT NULL,
+      anchoring VARCHAR(255) NOT NULL,
+      outgoing VARCHAR(255) NOT NULL,
+      x INT NOT NULL,
+      y INT NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES users(user_id)
+    )`);
 
     connection.release();
     console.log('App database initialized successfully');

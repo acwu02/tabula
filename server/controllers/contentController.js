@@ -23,6 +23,8 @@ contentRouter.use('/content/:userid', async (req, res, next) => {
 
 /* Endpoints */
 
+// TODO organize
+
 contentRouter.get('/content/:userid', async (req, res) => {
     const content = res.locals.content;
     const fetchedContent = await content.fetchContent();
@@ -93,7 +95,24 @@ contentRouter.put('/content/:userid/text/update-size/:id', async (req, res) => {
     const id = req.params.id;
     // console.log(height, width, id);
     await content.updateTextSize({ height, width }, id);
-    res.json({response: "success" });
+    res.json({ response: "success" });
 });
+
+contentRouter.post('/content/:id/upload/link', async (req, res) => {
+    const content = res.locals.content;
+    const anchoring = req.body.data.anchoringText;
+    const outgoingUrl = req.body.data.outgoingUrl;
+    await content.uploadLink(anchoring, outgoingUrl);
+    res.json({ response: "success" });
+});
+
+contentRouter.put('/content/:id/link/update-position/:id', async (req, res) => {
+    const content = res.locals.content;
+    const { x, y } = req.body.newCoords;
+    const id = req.params.id;
+    console.log(x, y, id);
+    await content.updateLinkCoords({ x, y }, id);
+    res.json({ response: "success" });
+})
 
 export default contentRouter;

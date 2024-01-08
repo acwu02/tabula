@@ -31,7 +31,6 @@ function Form({ onLogin, loginUser }) {
         setFormData({
             ...formData,
             [name]: value,
-
         });
     };
 

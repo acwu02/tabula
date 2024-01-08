@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import apiRequest from '../api/clientrequest';
 import Board from './Board';
 import Image from './Image';
+import LinkForm from './LinkForm';
 import '../css/App.css';
 
 const HOST = 'http://localhost:8080/uploads/';
@@ -11,9 +12,12 @@ function Content({ user }) {
     const fileInputRef = useRef(null);
     const [images, setImage] = useState([]);
     const [texts, setText] = useState([]);
+    const [links, setLink] = useState([]);
     const [imageHeight, setImageHeight] = useState(0);
     const [imageWidth, setImageWidth] = useState(0);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [showOverlay, setShowOverlay] = useState(false);
+    const [isUploadingLink, setIsUploadingLink] = useState(false);
 
     useEffect(() => {
 
@@ -47,7 +51,8 @@ function Content({ user }) {
     }
 
     const handleLinkClick = async () => {
-        // TODO
+        setIsUploadingLink(true);
+        setShowOverlay(true);
     }
 
     // TODO implement more robust checking
@@ -83,7 +88,6 @@ function Content({ user }) {
     }
 
     const uploadImage = async (newImage) => {
-        console.log(imageHeight, imageWidth);
         const metadata = new FormData();
         metadata.append("file", newImage);
         metadata.append("height", imageHeight);
@@ -92,12 +96,15 @@ function Content({ user }) {
         fetchContent();
     }
 
-    const updateText = async (newText) => {
-        // await apiRequest('PUT', `/content/${user.id}/update/text`, newText);
-    }
-
     const uploadText = async (text) => {
         await apiRequest('POST', `/content/${user.id}/upload/text`, { text: text });
+        fetchContent();
+    }
+
+    const uploadLink = async (data) => {
+        await apiRequest('POST', `/content/${user.id}/upload/link`, { data: data });
+        setShowOverlay(false);
+        setIsUploadingLink(false);
         fetchContent();
     }
 
@@ -123,6 +130,14 @@ function Content({ user }) {
             width: text.width
         }));
         setText(newTexts);
+        const newLinks = updatedContent.response.links.map(link => ({
+            x: link.x,
+            y: link.y,
+            id: link.link_id,
+            anchoring: link.anchoring,
+            outgoing: link.outgoing
+        }));
+        setLink(newLinks);
     }
 
     const onSetImage = async (coords, filename) => {
@@ -146,8 +161,18 @@ function Content({ user }) {
         await apiRequest('PUT', `/content/${user.id}/text/update-size/${textID}`, { newSize: newSize });
     }
 
+    const onSetLink = async (newCoords, linkID) => {
+        await apiRequest('PUT', `/content/${user.id}/link/update-position/${linkID}`, { newCoords: newCoords });
+    }
+
     return (
         <div>
+            {showOverlay && (
+                <div className="overlay"></div>
+            )}
+            {isUploadingLink && (
+                <LinkForm uploadLink={uploadLink}/>
+            )}
             <div id="sidebar">
                 <button id="text" onClick={handleTextClick}>Text</button>
                 <form id="uploadFile" encType="multipart/form-data">
@@ -160,11 +185,14 @@ function Content({ user }) {
                 <Board
                     images={images}
                     texts={texts}
+                    links={links}
                     onSetImage={onSetImage}
                     onSetText={onSetText}
                     updateTextContent={updateTextContent}
                     onResizeImage={onResizeImage}
-                    onResizeText={onResizeText} />
+                    onResizeText={onResizeText}
+                    onSetLink={onSetLink}
+                    />
             </div>
         </div>
     );

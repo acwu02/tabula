@@ -24,7 +24,12 @@ class UserContent {
                 FROM texts
                 WHERE user_id = ?
             `, [this.userID]);
-            return { images: images, texts: texts };
+            const [links, fieldsLinks] = await pool.query(`
+                SELECT *
+                FROM links
+                WHERE user_id = ?
+            `, [this.userID]);
+            return { images: images, texts: texts, links: links };
         } catch (e) {
             console.error('Error executing query:', e);
         }
@@ -118,6 +123,30 @@ class UserContent {
                 SET height = ?, width = ?
                 WHERE text_id = ?
             `, [newSize.height, newSize.width, id]);
+        } catch (e) {
+            console.error('Error executing query:', e);
+        }
+    }
+
+    async uploadLink(anchoringText, outgoingUrl) {
+        try {
+            const [rows, fields] = await pool.query(`
+            INSERT INTO links
+            (user_id, anchoring, outgoing, x, y)
+            VALUES (?, ?, ?, ?, ?)
+        `, [this.userID, anchoringText, outgoingUrl, INITIAL_POSITION, INITIAL_POSITION])
+        } catch (e) {
+            console.error('Error executing query:', e);
+        }
+    }
+
+    async updateLinkCoords(newCoords, linkID) {
+        try {
+            const [rows, fields] = await pool.query(`
+                UPDATE links
+                SET x = ?, y = ?
+                WHERE link_id = ?
+            `, [newCoords.x, newCoords.y, linkID])
         } catch (e) {
             console.error('Error executing query:', e);
         }

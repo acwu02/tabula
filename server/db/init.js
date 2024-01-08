@@ -40,6 +40,19 @@ const pool = createPool({
       size INT NOT NULL,
       x INT NOT NULL,
       y INT NOT NULL,
+      height INT NOT NULL,
+      width INT NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES users(user_id)
+    );`);
+
+    await connection.query(`CREATE TABLE texts (
+      text_id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT NOT NULL,
+      content VARCHAR(255) NOT NULL,
+      x INT NOT NULL,
+      y INT NOT NULL,
+      height INT NOT NULL,
+      width INT NOT NULL,
       FOREIGN KEY (user_id) REFERENCES users(user_id)
     );`);
 

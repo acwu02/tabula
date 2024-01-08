@@ -20,18 +20,23 @@ body {
 #sidebar {
   position: fixed;
   display: flex;
-
 }
 
-#text, #image, #link {
+#text,
+#image,
+#link {
+  position: relative;
   height: 5em;
   width: 5em;
+  z-index: 2;
 }
 
-.image{
+.image {
   position: fixed;
-  top: 1em;
-  left: 10em;
+  margin: 0px;
+  padding: 0px;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 #login {
@@ -44,4 +49,30 @@ body {
 
 .hidden {
   display: none;
+}
+
+.hover-border {
+  border: 7px solid #ccc;
+  position: relative;
+  width: fit-content;
+  display: inline-block;
+}
+
+.hidden-border {
+  padding: 7px;
+  visibility: none;
+}
+
+.image-list, .text-list {
+  position: absolute; /* Change to absolute */
+  z-index: 0;
+  left: 6em;
+  top: 0; /* Add this to align the elements properly */
+  height: 100%;
+}
+
+.image-list > *, .text-list > * { /* Specify direct children of image-list and text-list */
+  position: absolute; /* Change to absolute */
+  display: inline-block;
+  /* Add positioning properties as needed based on your layout */
 }

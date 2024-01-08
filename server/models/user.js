@@ -48,9 +48,11 @@ class User {
         }
     }
 
-    async retrieveContent() {
+    // TODO
+
+    async fetchContent() {
         try {
-            // TODO
+
         } catch (e) {
             console.error('Error executing query:', e);
         }

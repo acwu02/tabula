@@ -10,10 +10,6 @@ function App() {
     setUser(user);
   };
 
-  // const displayContent = (user) => {
-  //   alert("GONNA DISPLAY CONTENT");
-  // };
-
   return (
     <div id="app">
       {user && <Content user={user}/>}

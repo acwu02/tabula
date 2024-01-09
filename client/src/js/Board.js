@@ -7,7 +7,7 @@ import ResizableComponent from './ResizableComponent';
 
 const HOST = 'http://localhost:8080/uploads/';
 
-function Board({ images, texts, links, onSetImage, updateTextContent, onSetText, onResizeImage, onResizeText, onSetLink }) {
+function Board({ images, texts, links, onSetImage, updateTextContent, onSetText, onResizeImage, onResizeText, onSetLink, user }) {
 
     return (
         <div id="board">
@@ -22,7 +22,8 @@ function Board({ images, texts, links, onSetImage, updateTextContent, onSetText,
                         width={image.width}
                         source={`${HOST}${image.filename}`}
                         onSet={onSetImage}
-                        onResize={onResizeImage} />
+                        onResize={onResizeImage}
+                        user={user} />
                 ))}
             </div>
             <div className="text-list">
@@ -37,7 +38,8 @@ function Board({ images, texts, links, onSetImage, updateTextContent, onSetText,
                         width={text.width}
                         updateTextContent={updateTextContent}
                         onSet={onSetText}
-                        onResize={onResizeText} />
+                        onResize={onResizeText}
+                        user={user} />
                 ))}
             </div>
             <div className="link-list">
@@ -49,7 +51,8 @@ function Board({ images, texts, links, onSetImage, updateTextContent, onSetText,
                         outgoing={link.outgoing}
                         onSet={onSetLink}
                         x={link.x}
-                        y={link.y} />
+                        y={link.y}
+                        user={user} />
                 ))}
             </div>
         </div>

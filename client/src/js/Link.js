@@ -1,14 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DraggableComponent from './DraggableComponent';
 
-function Link({ text, outgoing, onSet, id, x, y }) {
+function Link({ text, outgoing, onSet, id, x, y, user, isDeleted }) {
 
-    // TODO Parse outgoing URL to check https://
+    useEffect(() => {
+        console.log("DELETED");
+      }, [isDeleted]);
 
+    const parseOutgoingUrl = (outgoingUrl) => {
+        if (outgoingUrl.match('https://')) {
+            return outgoingUrl;
+        } else {
+            return `https://${outgoingUrl}`;
+        }
+    };
 
     return (
-        <DraggableComponent onSet={onSet} id={id} x={x} y={y}>
-            <a href={outgoing}>{text}</a>
+        <DraggableComponent onSet={onSet} id={id} x={x} y={y} user={user} isDeleted={isDeleted}>
+            <a href={parseOutgoingUrl(outgoing)}>{text}</a>
         </DraggableComponent>
     )
 }

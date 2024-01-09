@@ -93,7 +93,6 @@ contentRouter.put('/content/:userid/text/update-size/:id', async (req, res) => {
     const content = res.locals.content;
     const { height, width } = req.body.newSize;
     const id = req.params.id;
-    // console.log(height, width, id);
     await content.updateTextSize({ height, width }, id);
     res.json({ response: "success" });
 });
@@ -110,7 +109,6 @@ contentRouter.put('/content/:id/link/update-position/:id', async (req, res) => {
     const content = res.locals.content;
     const { x, y } = req.body.newCoords;
     const id = req.params.id;
-    console.log(x, y, id);
     await content.updateLinkCoords({ x, y }, id);
     res.json({ response: "success" });
 })

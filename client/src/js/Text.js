@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import DraggableComponent from './DraggableComponent';
 
-function Text({ onSet, updateTextContent, x, y, id, textContent, onResize, height, width }) {
+function Text({ onSet, updateTextContent, x, y, id, textContent, onResize, height, width, user, isDeleted }) {
     const [text, setText] = useState(textContent);
     const [textSize, setTextSize] = useState({ height: height, width: width });
     const textareaRef = useRef(null);
@@ -21,12 +21,14 @@ function Text({ onSet, updateTextContent, x, y, id, textContent, onResize, heigh
             resizeObserver.observe(textarea);
         }
 
+        console.log("DELETED");
+
         return () => {
             if (resizeObserver) {
                 resizeObserver.disconnect();
             }
         };
-    }, []);
+    }, [isDeleted]);
 
     const handleResize = (element) => {
         const width = element.clientWidth;
@@ -44,7 +46,7 @@ function Text({ onSet, updateTextContent, x, y, id, textContent, onResize, heigh
     };
 
     return (
-        <DraggableComponent onSet={onSet} id={id} x={x} y={y}>
+        <DraggableComponent onSet={onSet} id={id} x={x} y={y} user={user} isDeleted={isDeleted}>
             <textarea
                 ref={textareaRef}
                 style={{

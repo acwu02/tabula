@@ -6,14 +6,14 @@ import '../css/App.css';
 function App() {
   const [user, setUser] = useState(null);
 
-  const onLogin = (user) => {
+  const onSetUser = (user) => {
     setUser(user);
   };
 
   return (
     <div id="app">
-      {user && <Content user={user}/>}
-      {!user && <Form onLogin={onLogin}/>}
+      {user && <Content user={user} onSetUser={onSetUser}/>}
+      {!user && <Form onLogin={onSetUser}/>}
     </div>
   );
 }

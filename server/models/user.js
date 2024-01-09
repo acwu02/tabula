@@ -63,20 +63,23 @@ class User {
             await pool.query(`
                 INSERT INTO
                 users (username, password)
-                VALUES (?, ?);`, [this.username, this.password]);
+                VALUES (?, ?);`,
+            [this.username, this.password]);
             return await this.login();
         } catch (e) {
             console.error('Error executing query:', e);
         }
     }
 
-    // For debugging
-    async dumpDB() {
+    async getRandomUser() {
         try {
-            let response = await pool.query(`
+            const [rows, fields] = await pool.query(`
                 SELECT *
-                FROM users;`);
-            return response;
+                FROM users
+                ORDER BY RANDOM()
+                LIMIT 1;`,
+            );
+            return rows;
         } catch (e) {
             console.error('Error executing query:', e);
         }

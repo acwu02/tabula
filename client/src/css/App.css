@@ -11,6 +11,24 @@ body {
   transform: translateY(-50%);
 }
 
+#return-home {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 5em;
+  width: 5em;
+  margin: 1em;
+}
+
+#explore {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 90%;
+  height: 5em;
+  width: 5em;
+}
+
 #uploadFile {
   height: 0;
   width: 0;
@@ -60,27 +78,24 @@ body {
 
 .hidden-border {
   padding: 7px;
-  visibility: none;
+  position: relative;
+  width: fit-content;
+  display: inline-block;
 }
 
 .image-list,
 .text-list {
   position: absolute;
-  /* Change to absolute */
   z-index: 0;
   left: 6em;
   top: 0;
-  /* Add this to align the elements properly */
   height: 100%;
 }
 
 .image-list>*,
 .text-list>* {
-  /* Specify direct children of image-list and text-list */
   position: absolute;
-  /* Change to absolute */
   display: inline-block;
-  /* Add positioning properties as needed based on your layout */
 }
 
 .overlay {
@@ -98,4 +113,11 @@ body {
 
 #link-form {
   z-index: 999;
+}
+
+#delete-button {
+  position: absolute;
+  top: -0.5em;
+  right: 0em;
+  z-index: 10;
 }

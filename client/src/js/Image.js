@@ -1,15 +1,19 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import DraggableComponent from './DraggableComponent';
 import ResizableComponent from './ResizableComponent';
 
-const Image = ({ source, onSet, x, y, height, width, onResize }) => {
+const Image = ({ source, id, onSet, x, y, height, width, onResize, isDeleted, user }) => {
   const [imgSize, setImgSize] = useState({ height: height, width: width });
   const nodeRef = useRef(null);
 
   const url = new URL(source);
   const pathname = url.pathname;
   const filename = pathname.split('/').pop();
-  console.log(filename);
+
+  // TODO fix deletion
+  useEffect(() => {
+    console.log("DELETED");
+  }, [isDeleted]);
 
   const updateImgSize = (newSize) => {
     setImgSize(newSize);
@@ -24,6 +28,8 @@ const Image = ({ source, onSet, x, y, height, width, onResize }) => {
         y={y}
         height={imgSize.height}
         width={imgSize.width}
+        user={user}
+        isDeleted={isDeleted}
         style={{
           height: imgSize.height,
           width: imgSize.width

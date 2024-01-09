@@ -3,11 +3,13 @@ import apiRequest from '../api/clientrequest';
 import Board from './Board';
 import Image from './Image';
 import LinkForm from './LinkForm';
+import ReturnHome from './ReturnHome';
+import Explore from './Explore';
 import '../css/App.css';
 
 const HOST = 'http://localhost:8080/uploads/';
 
-function Content({ user }) {
+function Content({ user, onSetUser }) {
 
     const fileInputRef = useRef(null);
     const [images, setImage] = useState([]);
@@ -18,6 +20,7 @@ function Content({ user }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [showOverlay, setShowOverlay] = useState(false);
     const [isUploadingLink, setIsUploadingLink] = useState(false);
+    const [isAtHome, setIsAtHome] = useState(true);
 
     useEffect(() => {
 
@@ -57,10 +60,10 @@ function Content({ user }) {
 
     // TODO implement more robust checking
     const handleFileSelect = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile) {
-            setSelectedFile(selectedFile);
-            readFile(e, selectedFile);
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            readFile(e, file);
             // uploadImage(selectedFile);
         } else {
             console.error('No file selected');
@@ -88,11 +91,13 @@ function Content({ user }) {
     }
 
     const uploadImage = async (newImage) => {
+        if (!selectedFile) return;
         const metadata = new FormData();
         metadata.append("file", newImage);
         metadata.append("height", imageHeight);
         metadata.append("width", imageWidth);
         await apiRequest('POST', `/content/${user.id}/upload/image`, metadata);
+        setSelectedFile(null);
         fetchContent();
     }
 
@@ -108,9 +113,8 @@ function Content({ user }) {
         fetchContent();
     }
 
+    // TODO decompose
     const fetchContent = async () => {
-        // TODO separate retrieval of images and text
-        // TODO update fetchContent to include text
         const updatedContent = await apiRequest('GET', `/content/${user.id}`);
         const newImages = updatedContent.response.images.map(image => ({
             x: image.x,
@@ -165,22 +169,40 @@ function Content({ user }) {
         await apiRequest('PUT', `/content/${user.id}/link/update-position/${linkID}`, { newCoords: newCoords });
     }
 
+    const onReturnHome = () => {
+        alert("Returning home");
+        setIsAtHome(true);
+    }
+
+    const onExplore = () => {
+        alert("Exploring");
+        setIsAtHome(false);
+    }
+
     return (
         <div>
             {showOverlay && (
                 <div className="overlay"></div>
             )}
             {isUploadingLink && (
-                <LinkForm uploadLink={uploadLink}/>
+                <LinkForm uploadLink={uploadLink} />
             )}
-            <div id="sidebar">
-                <button id="text" onClick={handleTextClick}>Text</button>
-                <form id="uploadFile" encType="multipart/form-data">
-                    <input type="file" name="file" id="fileInput" ref={fileInputRef} hidden />
-                </form>
-                <button id="image" onClick={handleImageClick}>Image</button>
-                <button id="link" onClick={handleLinkClick}>Link</button>
-            </div>
+            {!isAtHome && (
+                <ReturnHome onReturnHome={onReturnHome} />
+            )}
+            {isAtHome && (
+                <Explore onExplore={onExplore} />
+            )}
+            {isAtHome &&
+                <div id="sidebar">
+                    <button id="text" onClick={handleTextClick}>Text</button>
+                    <form id="uploadFile" encType="multipart/form-data">
+                        <input type="file" name="file" id="fileInput" ref={fileInputRef} hidden />
+                    </form>
+                    <button id="image" onClick={handleImageClick}>Image</button>
+                    <button id="link" onClick={handleLinkClick}>Link</button>
+                </div>
+            }
             <div id="content">
                 <Board
                     images={images}
@@ -192,7 +214,8 @@ function Content({ user }) {
                     onResizeImage={onResizeImage}
                     onResizeText={onResizeText}
                     onSetLink={onSetLink}
-                    />
+                    user={user}
+                />
             </div>
         </div>
     );

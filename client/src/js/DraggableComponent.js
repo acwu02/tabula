@@ -1,12 +1,16 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Draggable from 'react-draggable';
+import apiRequest from '../api/clientrequest';
 
-const DraggableComponent = ({ children, onSet, id, x, y, height, width }) => {
+const DraggableComponent = ({ children, onSet, id, x, y, height, width, user }) => {
+
     const [position, setPosition] = useState({ x: x, y: y });
-    const [size, setSize] = useState({ height: height , width: width });
+    const [size, setSize] = useState({ height: height, width: width });
     const nodeRef = useRef(null);
     const [isHovered, setIsHovered] = useState(false);
     const innerDivClassName = isHovered ? "hover-border" : "hidden-border";
+    const deleteClassName = isHovered ? "hidden" : null;
+    const [isDeleted, setIsDeleted] = useState(null);
 
     const handleMouseEnter = (e) => {
         setSize(size);
@@ -36,6 +40,12 @@ const DraggableComponent = ({ children, onSet, id, x, y, height, width }) => {
         onSet(position, id);
     }
 
+    // TODO figure out API route for deletion?
+    const onDelete = () => {
+        setIsDeleted(true);
+    }
+
+    // TODO fix wack jsx
     return (
         <Draggable
             nodeRef={nodeRef}
@@ -57,7 +67,14 @@ const DraggableComponent = ({ children, onSet, id, x, y, height, width }) => {
                     onMouseLeave={handleChildLeave}
                     height={size.height}
                     width={size.width}>
-                    {children}
+                    <div id="delete-button" className={deleteClassName} onClick={onDelete}>
+                        x
+                    </div>
+                    {React.Children.map(children, (child) => {
+                        return React.cloneElement(child, {
+                            isDeleted: isDeleted
+                        });
+                    })}
                 </div>
             </div>
         </Draggable >

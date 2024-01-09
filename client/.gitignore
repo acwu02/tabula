@@ -14,6 +14,9 @@
 # notes
 thoughts.txt
 
+# uploaded content
+/server/file_storage/uploads
+
 # misc
 .DS_Store
 .env.local

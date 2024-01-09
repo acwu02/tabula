@@ -13,7 +13,7 @@ usersRouter.use('/users', async (req, res, next) => {
     const user = new User(username, password);
     res.locals.user = user;
     next();
-})
+});
 
 /* Endpoints */
 
@@ -33,5 +33,12 @@ usersRouter.post('/users/login', async (req, res) => {
     user.setID(userID);
     res.json({ response: user });
 });
+
+usersRouter.get('/users/random', async (req, res) => {
+    const user = res.locals.user;
+    const randomUser = await user.getRandomUser();
+    console.log(randomUser);
+    res.json({ response: randomUser });
+})
 
 export default usersRouter;

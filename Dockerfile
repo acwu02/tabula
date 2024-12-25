@@ -19,7 +19,7 @@ COPY . .
 EXPOSE 3000
 
 # Define the command to start your application
-CMD ["node", "src/index.js"]
+CMD ["node", "server/index.js"]
 
 # FROM node:18-alpine
 # WORKDIR .

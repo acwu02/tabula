@@ -1,4 +1,4 @@
-const API_URL = "https://tabula-fu9l.onrender.com";
+const API_URL = process.env.PORT;
 
 class HTTPError extends Error {
   constructor(status, error) {
